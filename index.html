@@ -1,123 +1,511 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { LineChart, BotIcon } from "lucide-react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Activation · Predictor Program</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #020617;
+      --accent: #facc15;
+      --accent-soft: rgba(250, 204, 21, 0.12);
+      --accent-border: rgba(250, 204, 21, 0.6);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: #1f2937;
+      --danger: #f97373;
+    }
 
-export default function InvestmentSite() {
-  useEffect(() => {
-    document.title = "ProfitSignals | Трейдинг сигналы и бот";
-  }, []);
+    * { box-sizing: border-box; }
 
-  const [activeDetail, setActiveDetail] = useState<number | null>(null);
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
 
-  const tradingDetails: Record<number, string> = {
-    100: "• Торговля на USDT/BTC и ETH с использованием AI\n• Уровень риска: низкий\n• Точки входа рассчитываются по RSI + объёмы\n• Тестировано на исторических данных за 3 года\n• Средняя длительность сделки: 1-3 часа",
-    400: "• Средства делятся на 3 алгоритма: скальпинг, свинг и нейросеть\n• Алгоритмы торгуют разными парами и таймфреймами\n• Уровень риска: умеренный\n• Используется новостной фильтр и фильтрация по волатильности\n• Включена адаптивная система стоп-лоссов",
-    600: "• Профессиональный режим с ежедневными обзорами\n• Подключение к API Binance/Bybit с двухфакторной защитой\n• Стратегии: свинг, трендовые входы, внутридневная корреляция\n• Контроль просадки в реальном времени\n• Поддержка через Telegram 24/7"
-  };
+    .page {
+      width: 100%;
+      max-width: 560px;
+    }
 
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-white text-gray-900 px-6 md:px-16 py-12 space-y-32">
-      {/* Header */}
-      <section className="text-center space-y-8">
-        <h1 className="text-5xl md:text-7xl font-extrabold text-blue-900 tracking-tight">ProfitSignals</h1>
-        <p className="text-xl md:text-2xl max-w-2xl mx-auto text-gray-700">
-          +30% до +40% прибыли ежемесячно с нашими трейдинг-сигналами и AI-ботом
-        </p>
-        <Button className="text-lg px-10 py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-md">
-          Начать зарабатывать
-        </Button>
-      </section>
+    .card {
+      background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.12), transparent 55%),
+                  #020617;
+      border-radius: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: 0 22px 40px rgba(0, 0, 0, 0.6);
+      padding: 22px 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
 
-      {/* Features */}
-      <section className="grid md:grid-cols-2 gap-12">
-        <Card className="bg-white border border-blue-200 shadow-xl rounded-2xl">
-          <CardContent className="p-8">
-            <div className="flex items-center gap-4 mb-4">
-              <LineChart className="text-blue-500 w-10 h-10" />
-              <h2 className="text-2xl font-semibold text-blue-800">Премиум сигналы</h2>
-            </div>
-            <p className="text-gray-700">
-              87% успешных сделок — сигналы от опытных аналитиков. В режиме
-              реального времени в Telegram.
-            </p>
-          </CardContent>
-        </Card>
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
 
-        <Card className="bg-white border border-indigo-200 shadow-xl rounded-2xl">
-          <CardContent className="p-8">
-            <div className="flex items-center gap-4 mb-4">
-              <BotIcon className="text-indigo-500 w-10 h-10" />
-              <h2 className="text-2xl font-semibold text-indigo-800">AI-трейдинг бот</h2>
-            </div>
-            <p className="text-gray-700">
-              Запусти бота на своём аккаунте и получай прибыль в автоматическом
-              режиме. Binance, Bybit и другие.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
+    .badge-geo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
 
-      {/* Investment Examples */}
-      <section className="text-center space-y-10">
-        <h3 className="text-4xl font-bold text-blue-900">Примеры прибыли</h3>
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {[100, 400, 600].map((amount) => (
-            <Card key={amount} className="bg-white border border-green-300 shadow-md rounded-2xl relative overflow-hidden">
-              <CardContent className="p-8 pb-28">
-                <p className="text-lg font-medium text-gray-800">
-                  Инвестировал: <span className="font-bold">${amount}</span>
-                </p>
-                <p className="text-3xl mt-2 text-green-600 font-bold">
-                  Доход: ${Math.round(amount * 8.3)}
-                </p>
-                <Button
-                  className="mt-6 bg-blue-500 text-white hover:bg-blue-600 rounded-xl"
-                  onClick={() => setActiveDetail(activeDetail === amount ? null : amount)}
-                >
-                  Подробнее о стратегии
-                </Button>
-              </CardContent>
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.2);
+    }
 
-              <div
-                className={`absolute left-0 right-0 bottom-0 bg-blue-100 text-gray-800 text-sm transition-all duration-300 ease-in-out ${
-                  activeDetail === amount ? "translate-y-0" : "translate-y-full"
-                } p-5 rounded-b-2xl shadow-inner`}
-              >
-                <ul className="list-disc pl-5 text-left space-y-1">
-                  {tradingDetails[amount]
-                    .split("\n")
-                    .filter(Boolean)
-                    .map((line, idx) => (
-                      <li key={idx}>{line.replace("•", "").trim()}</li>
-                    ))}
-                </ul>
-              </div>
-            </Card>
-          ))}
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 span.icon {
+      font-size: 1.6rem;
+    }
+
+    .subtitle {
+      margin: 0 0 16px;
+      font-size: 0.93rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .highlight {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .input-row {
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 9px 11px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-main);
+      font-size: 0.9rem;
+    }
+
+    input[type="text"]::placeholder {
+      color: #6b7280;
+      font-size: 0.85rem;
+    }
+
+    select:invalid {
+      color: #6b7280;
+    }
+
+    .error {
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: #fecaca;
+      min-height: 1em;
+    }
+
+    .btn-main,
+    .btn-secondary {
+      width: 100%;
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn-main {
+      background: linear-gradient(135deg, #facc15, #eab308);
+      color: #020617;
+      box-shadow: 0 16px 30px rgba(250, 204, 21, 0.35);
+    }
+
+    .btn-main span.icon,
+    .btn-secondary span.icon {
+      font-size: 1.1rem;
+    }
+
+    .btn-main:disabled,
+    .btn-secondary:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-main);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      margin-top: 6px;
+    }
+
+    /* "Окошки" */
+    .view { display: none; }
+    .view.is-active { display: block; }
+
+    .status-box {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 0.86rem;
+    }
+
+    .status-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+
+    .status-log p {
+      margin: 3px 0;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .status-log p.strong {
+      color: var(--accent);
+    }
+
+    .profit-box {
+      margin-top: 10px;
+      padding: 9px 11px;
+      border-radius: 12px;
+      background: rgba(22, 163, 74, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.8);
+      font-size: 0.86rem;
+    }
+
+    .profit-box strong {
+      color: #bbf7d0;
+    }
+
+    .deposit-warning {
+      margin-top: 12px;
+      padding: 9px 11px;
+      border-radius: 12px;
+      background: rgba(220, 38, 38, 0.18);
+      border: 1px solid rgba(248, 113, 113, 0.9);
+      font-size: 0.85rem;
+      color: #fee2e2;
+    }
+
+    .deposit-warning strong {
+      color: #fecaca;
+    }
+
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(250, 204, 21, 0.7);
+      background: rgba(15, 23, 42, 0.98);
+      color: #fefce8;
+      font-size: 0.82rem;
+      text-decoration: none;
+      gap: 6px;
+    }
+
+    .link-btn span.icon {
+      font-size: 1rem;
+    }
+
+    .link-btn:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.6);
+    }
+
+    footer {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="card">
+      <div class="card-inner">
+        <div class="badge-geo">
+          <span class="badge-dot"></span>
+          🇵🇭 Philippines · Access Setup
         </div>
-        <Button className="bg-blue-600 text-white px-10 py-5 hover:bg-blue-700 rounded-2xl shadow-lg">
-          Хочу такую прибыль
-        </Button>
-      </section>
 
-      {/* Guarantee */}
-      <section className="text-center space-y-6 bg-white/80 py-16 px-4 rounded-3xl shadow-xl max-w-4xl mx-auto">
-        <h3 className="text-4xl font-bold text-blue-900">Гарантия результата или возврат</h3>
-        <p className="text-lg text-gray-700">
-          Если наш бот не принесет минимум +30% за месяц — вернем деньги. Всё прозрачно и с договорами.
-        </p>
-        <Button className="bg-green-500 text-white px-10 py-5 hover:bg-green-600 rounded-2xl shadow-md">
-          Попробовать бесплатно
-        </Button>
-      </section>
+        <h1>
+          <span class="icon">💳</span>
+          System activation
+        </h1>
 
-      {/* Footer */}
-      <footer className="text-center text-gray-500 text-sm pt-24">
-        <p>
-          © 2025 ProfitSignals. Все права защищены. Не является индивидуальной инвестиционной рекомендацией.
+        <p class="subtitle">
+          Enter your <span class="highlight">1xBet 10-digit Account ID</span>, which must start
+          <span class="highlight">148</span>, choose your game, and the program will simulate the
+          <span class="highlight">expected profit</span> for your account. Then you can proceed to deposit activation.
         </p>
-      </footer>
-    </main>
-  );
-}
+
+        <!-- VIEW 1: FORM -->
+        <div id="view-form" class="view is-active">
+          <form id="profit-form">
+            <div class="input-row">
+              <label for="account-id">1xBet Account ID</label>
+              <input
+                type="text"
+                id="account-id"
+                name="account-id"
+                maxlength="10"
+                autocomplete="off"
+                placeholder="Exemple : 1481234567"
+              />
+            </div>
+
+            <div class="input-row">
+              <label for="game">Choose your game</label>
+              <select id="game" name="game" required>
+                <option value="" disabled selected>— Select a game —</option>
+                <option value="aviator">Aviator ✈️</option>
+                <option value="mines">Mines 💣</option>
+                <option value="penalty">Penalty ⚽</option>
+              </select>
+            </div>
+
+            <div id="error" class="error"></div>
+
+            <button id="simulate-btn" class="btn-main" type="submit">
+              <span class="icon">📊</span>
+              <span>Simulate My Profit</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- VIEW 2: STATUS -->
+        <div id="view-status" class="view">
+          <div id="status-box" class="status-box">
+            <div class="status-title">Simulation In Progress</div>
+            <div id="status-log" class="status-log"></div>
+          </div>
+        </div>
+
+        <!-- VIEW 3: PROFIT -->
+        <div id="view-profit" class="view">
+          <div id="profit-box" class="profit-box">
+            For <span id="chosen-game-label"></span>,
+            the program shows a potential profit of approximately
+            <strong id="profit-amount"></strong>.
+          </div>
+
+          <button id="start-btn" class="btn-secondary" type="button">
+            <span class="icon">🚀</span>
+            <span>Start Earning Now</span>
+          </button>
+        </div>
+
+        <!-- VIEW 4: DEPOSIT -->
+        <div id="view-deposit" class="view">
+          <div id="deposit-warning" class="deposit-warning">
+            <strong>⚠️ Cannot activate the program now:</strong><br />
+            The current deposit detected on this account = <strong>0 PHP</strong>.<br />
+            For the program to work correctly, you must make a
+            <strong>first deposit</strong> on this same account.<br />
+            After depositing, return to this page and restart the activation.
+            <br />
+            <a
+              href="https://1xlite-09321.bar/ru/office/recharge"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="link-btn"
+            >
+              <span class="icon">💳</span>
+              <span>Go to Deposit Page</span>
+            </a>
+          </div>
+        </div>
+
+        <footer>
+          © <span id="year"></span> Predictor Program · Activation
+        </footer>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const form = document.getElementById("profit-form");
+    const input = document.getElementById("account-id");
+    const gameSelect = document.getElementById("game");
+    const errorEl = document.getElementById("error");
+    const simulateBtn = document.getElementById("simulate-btn");
+
+    const statusLog = document.getElementById("status-log");
+
+    const chosenGameLabel = document.getElementById("chosen-game-label");
+    const profitAmountEl = document.getElementById("profit-amount");
+
+    const startBtn = document.getElementById("start-btn");
+
+    // Views (окошки)
+    const views = {
+      form: document.getElementById("view-form"),
+      status: document.getElementById("view-status"),
+      profit: document.getElementById("view-profit"),
+      deposit: document.getElementById("view-deposit"),
+    };
+
+    function showOnly(viewKey) {
+      Object.entries(views).forEach(([k, el]) => {
+        el.classList.toggle("is-active", k === viewKey);
+      });
+    }
+
+    const gameLabels = {
+      aviator: "Aviator ✈️",
+      mines: "Mines 💣",
+      penalty: "Penalty ⚽"
+    };
+
+    const gameProfits = {
+      aviator: 4400,
+      mines: 3900,
+      penalty: 7730
+    };
+
+    function formatPHP(amount) {
+      return amount.toLocaleString("en-US") + " PHP";
+    }
+
+    function resetUIToForm() {
+      errorEl.textContent = "";
+      statusLog.innerHTML = "";
+      simulateBtn.disabled = false;
+      input.disabled = false;
+      gameSelect.disabled = false;
+      showOnly("form");
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      errorEl.textContent = "";
+      statusLog.innerHTML = "";
+
+      const raw = (input.value || "").trim();
+      const id = raw.replace(/\s+/g, "");
+      const game = gameSelect.value;
+
+      // digits only
+      if (!/^\d+$/.test(id)) {
+        errorEl.textContent = "The ID must contain digits only.";
+        return;
+      }
+      if (id.length !== 10) {
+        errorEl.textContent = "The 1xBet ID must be exactly 10 digits long.";
+        return;
+      }
+      if (!id.startsWith("148")) {
+        errorEl.textContent = "The ID must start with 148 to be recognized by the program";
+        return;
+      }
+      if (!game) {
+        errorEl.textContent = "Please select a game for the simulation first.";
+        return;
+      }
+
+      // lock inputs
+      simulateBtn.disabled = true;
+      input.disabled = true;
+      gameSelect.disabled = true;
+
+      // show STATUS window only
+      showOnly("status");
+
+      const steps = [
+        "Connecting to the 1xBet server to verify your account…",
+        "Synchronizing your ID with the predictor program database…",
+        "Calculating potential profit for this game and account…"
+      ];
+
+      let index = 0;
+
+      function showNextStep() {
+        if (index < steps.length) {
+          const p = document.createElement("p");
+          p.textContent = steps[index];
+          if (index === steps.length - 1) p.classList.add("strong");
+          statusLog.appendChild(p);
+          index++;
+          setTimeout(showNextStep, 900);
+        } else {
+          // finish: show PROFIT, and DELETE logs + hide STATUS
+          const profit = gameProfits[game] || 3500;
+          chosenGameLabel.textContent = gameLabels[game] || "this game";
+          profitAmountEl.textContent = formatPHP(profit);
+
+          // очистка логов после завершения
+          statusLog.innerHTML = "";
+
+          // unlock inputs (если пользователь захочет вернуться и заново активировать)
+          simulateBtn.disabled = false;
+          input.disabled = false;
+          gameSelect.disabled = false;
+
+          // show PROFIT window only
+          showOnly("profit");
+        }
+      }
+
+      showNextStep();
+    });
+
+    // Start → показать только депозит, а весь предыдущий интерфейс исчезает
+    startBtn.addEventListener("click", function () {
+      showOnly("deposit");
+    });
+
+    // На всякий случай: если хочешь принудительно стартовать с формы при загрузке
+    // resetUIToForm();
+  </script>
+</body>
+</html>
