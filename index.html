@@ -1,511 +1,211 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Activation · Predictor Program</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Predictor – Depósito</title>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' rx='12' fill='%2300ff88'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, Helvetica, sans-serif' font-size='28' font-weight='700' fill='%23000000'%3EPR%3C/text%3E%3C/svg%3E" />
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
   <style>
-    :root {
-      --bg: #020617;
-      --card: #020617;
-      --accent: #facc15;
-      --accent-soft: rgba(250, 204, 21, 0.12);
-      --accent-border: rgba(250, 204, 21, 0.6);
-      --text-main: #f9fafb;
-      --text-muted: #9ca3af;
-      --border: #1f2937;
-      --danger: #f97373;
-    }
+    .console-box { font-family: monospace; background-color: #0b0b0b; padding: 1rem; border-radius: 0.75rem; box-shadow: inset 0 0 20px rgba(0,255,136,.35), 0 0 18px rgba(0,255,136,.35); color: #00ff88; height: 300px; overflow-y: auto; position: relative; }
+    .console-message { opacity: 0; transition: opacity 0.5s ease-in-out; margin-bottom: 2px; }
+    .console-message.show { opacity: 1; }
+    .loading-screen { font-family: monospace; background: #000; color: #00ff88; display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; z-index: 50; position: fixed; top: 0; left: 0; width: 100%; }
+    .hidden-screen { display: none; }
 
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .page {
-      width: 100%;
-      max-width: 560px;
-    }
-
-    .card {
-      background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.12), transparent 55%),
-                  #020617;
-      border-radius: 24px;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      box-shadow: 0 22px 40px rgba(0, 0, 0, 0.6);
-      padding: 22px 20px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    .badge-geo {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .badge-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.2);
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    h1 span.icon {
-      font-size: 1.6rem;
-    }
-
-    .subtitle {
-      margin: 0 0 16px;
-      font-size: 0.93rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    .highlight {
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    label {
-      display: block;
-      font-size: 0.85rem;
-      margin-bottom: 6px;
-      color: var(--text-main);
-    }
-
-    .input-row {
-      margin-bottom: 10px;
-    }
-
-    input[type="text"],
-    select {
-      width: 100%;
-      padding: 9px 11px;
-      border-radius: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--text-main);
-      font-size: 0.9rem;
-    }
-
-    input[type="text"]::placeholder {
-      color: #6b7280;
-      font-size: 0.85rem;
-    }
-
-    select:invalid {
-      color: #6b7280;
-    }
-
-    .error {
-      margin-top: 4px;
-      font-size: 0.8rem;
-      color: #fecaca;
-      min-height: 1em;
-    }
-
-    .btn-main,
-    .btn-secondary {
-      width: 100%;
-      margin-top: 8px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 11px 14px;
-      border-radius: 999px;
-      border: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .btn-main {
-      background: linear-gradient(135deg, #facc15, #eab308);
-      color: #020617;
-      box-shadow: 0 16px 30px rgba(250, 204, 21, 0.35);
-    }
-
-    .btn-main span.icon,
-    .btn-secondary span.icon {
-      font-size: 1.1rem;
-    }
-
-    .btn-main:disabled,
-    .btn-secondary:disabled {
-      opacity: 0.6;
-      cursor: default;
-      box-shadow: none;
-    }
-
-    .btn-secondary {
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--text-main);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      margin-top: 6px;
-    }
-
-    /* "Окошки" */
-    .view { display: none; }
-    .view.is-active { display: block; }
-
-    .status-box {
-      margin-top: 14px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      font-size: 0.86rem;
-    }
-
-    .status-title {
-      font-weight: 600;
-      margin-bottom: 6px;
-      font-size: 0.9rem;
-    }
-
-    .status-log p {
-      margin: 3px 0;
-      font-size: 0.84rem;
-      color: var(--text-muted);
-    }
-
-    .status-log p.strong {
-      color: var(--accent);
-    }
-
-    .profit-box {
-      margin-top: 10px;
-      padding: 9px 11px;
-      border-radius: 12px;
-      background: rgba(22, 163, 74, 0.12);
-      border: 1px solid rgba(34, 197, 94, 0.8);
-      font-size: 0.86rem;
-    }
-
-    .profit-box strong {
-      color: #bbf7d0;
-    }
-
-    .deposit-warning {
-      margin-top: 12px;
-      padding: 9px 11px;
-      border-radius: 12px;
-      background: rgba(220, 38, 38, 0.18);
-      border: 1px solid rgba(248, 113, 113, 0.9);
-      font-size: 0.85rem;
-      color: #fee2e2;
-    }
-
-    .deposit-warning strong {
-      color: #fecaca;
-    }
-
-    .link-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 8px;
-      padding: 7px 11px;
-      border-radius: 999px;
-      border: 1px solid rgba(250, 204, 21, 0.7);
-      background: rgba(15, 23, 42, 0.98);
-      color: #fefce8;
-      font-size: 0.82rem;
-      text-decoration: none;
-      gap: 6px;
-    }
-
-    .link-btn span.icon {
-      font-size: 1rem;
-    }
-
-    .link-btn:hover {
-      filter: brightness(1.08);
-      box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.6);
-    }
-
-    footer {
-      margin-top: 14px;
-      text-align: center;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
+    /* Winners block */
+    #winnersBlock { max-width:900px; margin:1rem auto 2rem auto; display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
+    .winner-item { display:flex; align-items:center; justify-content:flex-start; gap:0.5rem; background:#111827; padding:0.5rem 1rem; border-radius:0.5rem; opacity:0; transform:translateY(10px); transition:all 0.5s ease;}
+    .winner-item.show { opacity:1; transform:translateY(0);}
+    .winner-icon { color:#60a5fa; }
+    .winner-id { font-weight:bold; }
+    .winner-amount { margin-left:auto; font-weight:bold; color:#facc15; }
   </style>
 </head>
-<body>
-  <div class="page">
-    <section class="card">
-      <div class="card-inner">
-        <div class="badge-geo">
-          <span class="badge-dot"></span>
-          🇵🇭 Philippines · Access Setup
-        </div>
+<body class="bg-gray-900 text-white font-sans">
 
-        <h1>
-          <span class="icon">💳</span>
-          System activation
-        </h1>
+  <div id="loading" class="loading-screen">
+    <p>Cargando... Preparando tu experiencia.</p>
+  </div>
 
-        <p class="subtitle">
-          Enter your <span class="highlight">1xBet 10-digit Account ID</span>, which must start
-          <span class="highlight">148</span>, choose your game, and the program will simulate the
-          <span class="highlight">expected profit</span> for your account. Then you can proceed to deposit activation.
-        </p>
+  <div id="mainContent" class="hidden-screen">
+    <header class="w-full bg-gray-800 p-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-green-400">AI Predictor 1xBet</h1>
+      <nav class="space-x-4">
+        <a href="#how" class="hover:text-green-400">Cómo funciona</a>
+        <a href="#games" class="hover:text-green-400">Juegos</a>
+        <a href="#start" class="hover:text-green-400">Comenzar</a>
+      </nav>
+    </header>
 
-        <!-- VIEW 1: FORM -->
-        <div id="view-form" class="view is-active">
-          <form id="profit-form">
-            <div class="input-row">
-              <label for="account-id">1xBet Account ID</label>
-              <input
-                type="text"
-                id="account-id"
-                name="account-id"
-                maxlength="10"
-                autocomplete="off"
-                placeholder="Exemple : 1481234567"
-              />
-            </div>
+    <section class="min-h-screen flex flex-col items-center justify-center px-4 text-center">
+      <h2 class="text-3xl md:text-5xl font-bold mb-6">Gana dinero real con predicciones impulsadas por IA</h2>
+      <div class="mb-4 text-lg font-semibold text-yellow-300">👋 ¡Bienvenido al servicio oficial de <span class="text-green-400">Hackbot</span>!</div>
+      <p class="max-w-xl mb-6 text-gray-300">Únete a miles de usuarios que ganan con nuestra IA en Aviator, Mines y Penalty. Alta precisión, predicciones en tiempo real y retiros instantáneos.</p>
 
-            <div class="input-row">
-              <label for="game">Choose your game</label>
-              <select id="game" name="game" required>
-                <option value="" disabled selected>— Select a game —</option>
-                <option value="aviator">Aviator ✈️</option>
-                <option value="mines">Mines 💣</option>
-                <option value="penalty">Penalty ⚽</option>
-              </select>
-            </div>
+      <div id="denyMsg" class="hidden mb-3 text-red-400 font-semibold">
+        Acceso denegado: el ID de cuenta debe comenzar con <strong>149</strong> o superior.
+      </div>
 
-            <div id="error" class="error"></div>
+      <input id="userId" type="text" maxlength="10" placeholder="ID de 1xBet" class="bg-gray-700 text-white p-3 rounded-md mb-4" />
+      <button id="connectButton" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl text-lg transition mt-4">
+        Conectar cuenta
+      </button>
 
-            <button id="simulate-btn" class="btn-main" type="submit">
-              <span class="icon">📊</span>
-              <span>Simulate My Profit</span>
-            </button>
-          </form>
-        </div>
+      <div id="connectionSuccess" class="hidden mt-6 text-green-400 font-bold text-center">
+        <p>ID de cuenta: <span id="accountIdDisplay"></span> conectado con éxito!</p>
+        <p>Estado: Activo | Precisión de predicción 100% | Algoritmos de IA analizados</p>
+        <button id="getSignalButton" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-xl text-lg transition mt-4">
+          Obtener señal
+        </button>
 
-        <!-- VIEW 2: STATUS -->
-        <div id="view-status" class="view">
-          <div id="status-box" class="status-box">
-            <div class="status-title">Simulation In Progress</div>
-            <div id="status-log" class="status-log"></div>
+        <div id="depositBox" class="hidden bg-red-600 p-6 rounded-xl max-w-md mx-auto mt-6 text-center">
+          <h2 class="text-xl font-bold mb-2">⚠️ Depósito no encontrado</h2>
+          <p class="mb-4">Tu saldo está vacío. Por favor deposita <strong>al menos 10,000 CLP</strong> para desbloquear señales y empezar a ganar.</p>
+          <a href="https://tinyurl.com/1xAviator" target="_blank" id="depositButton" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg transition">
+            Depositar ahora
+          </a>
+          <div class="mt-6 bg-red-800 text-white p-4 rounded-lg font-bold">
+            <div class="mb-1 text-lg">Tu código promocional: <span class="bg-black p-1 rounded text-green-400">NKN55</span></div>
+            <div>Regístrate <span class="underline">solo</span> con este código para acceder a todas las funciones</div>
           </div>
         </div>
-
-        <!-- VIEW 3: PROFIT -->
-        <div id="view-profit" class="view">
-          <div id="profit-box" class="profit-box">
-            For <span id="chosen-game-label"></span>,
-            the program shows a potential profit of approximately
-            <strong id="profit-amount"></strong>.
-          </div>
-
-          <button id="start-btn" class="btn-secondary" type="button">
-            <span class="icon">🚀</span>
-            <span>Start Earning Now</span>
-          </button>
-        </div>
-
-        <!-- VIEW 4: DEPOSIT -->
-        <div id="view-deposit" class="view">
-          <div id="deposit-warning" class="deposit-warning">
-            <strong>⚠️ Cannot activate the program now:</strong><br />
-            The current deposit detected on this account = <strong>0 PHP</strong>.<br />
-            For the program to work correctly, you must make a
-            <strong>first deposit</strong> on this same account.<br />
-            After depositing, return to this page and restart the activation.
-            <br />
-            <a
-              href="https://1xlite-09321.bar/ru/office/recharge"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="link-btn"
-            >
-              <span class="icon">💳</span>
-              <span>Go to Deposit Page</span>
-            </a>
-          </div>
-        </div>
-
-        <footer>
-          © <span id="year"></span> Predictor Program · Activation
-        </footer>
       </div>
     </section>
+
+    <section>
+      <header class="text-xl font-bold text-green-400 mt-6 mb-4 text-center">Ganadores de hoy (CLP)</header>
+      <div id="winnersBlock"></div>
+    </section>
+
+    <section class="bg-black py-12 px-6 text-center">
+      <h3 class="text-xl font-bold text-green-400 mb-4">[ Console – Monitoring Log ]</h3>
+      <div class="console-box max-w-3xl mx-auto text-left" id="console"></div>
+    </section>
+
+    <section id="games" class="bg-gray-800 py-12 px-6 text-center">
+      <h3 class="text-2xl font-bold text-green-400 mb-6">Juegos soportados</h3>
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div class="bg-gray-700 p-6 rounded-xl shadow-lg"><h4 class="text-xl font-bold mb-2">🎮 Aviator</h4><p class="text-gray-300">Predice el mejor momento para retirar antes de que el avión despegue.</p></div>
+        <div class="bg-gray-700 p-6 rounded-xl shadow-lg"><h4 class="text-xl font-bold mb-2">💣 Mines</h4><p class="text-gray-300">Evita las bombas y maximiza tus ganancias con rutas seguras.</p></div>
+        <div class="bg-gray-700 p-6 rounded-xl shadow-lg"><h4 class="text-xl font-bold mb-2">🥅 Penalty</h4><p class="text-gray-300">Supera al portero con predicciones basadas en datos.</p></div>
+      </div>
+    </section>
+
+    <section id="how" class="bg-gray-900 py-12 px-6 text-center">
+      <h3 class="text-2xl font-bold text-green-400 mb-6">Cómo funciona</h3>
+      <div class="max-w-3xl mx-auto space-y-4 text-gray-300">
+        <p>📡 La IA analiza datos en vivo y el historial del juego 24/7.</p>
+        <p>💡 Detecta patrones ganadores con alta fiabilidad.</p>
+        <p>📲 Recibe señales en tiempo real directamente en tu dispositivo.</p>
+      </div>
+    </section>
+
+    <footer class="text-center text-gray-500 text-sm py-6">© 2025 AI Predictor. No afiliado con 1xBet. Usa con responsabilidad.</footer>
   </div>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+  document.addEventListener('DOMContentLoaded',()=>{
+    setTimeout(()=>{
+      document.getElementById('loading').classList.add('hidden-screen');
+      document.getElementById('mainContent').classList.remove('hidden-screen');
+    },3000);
 
-    const form = document.getElementById("profit-form");
-    const input = document.getElementById("account-id");
-    const gameSelect = document.getElementById("game");
-    const errorEl = document.getElementById("error");
-    const simulateBtn = document.getElementById("simulate-btn");
+    const userIdInput = document.getElementById('userId');
+    const denyMsg = document.getElementById('denyMsg');
+    const connectionSuccess = document.getElementById('connectionSuccess');
+    const accountIdDisplay = document.getElementById('accountIdDisplay');
+    const connectBtn = document.getElementById('connectButton');
+    const getSignalBtn = document.getElementById('getSignalButton');
+    const depositBox = document.getElementById('depositBox');
+    const consoleEl = document.getElementById('console');
 
-    const statusLog = document.getElementById("status-log");
-
-    const chosenGameLabel = document.getElementById("chosen-game-label");
-    const profitAmountEl = document.getElementById("profit-amount");
-
-    const startBtn = document.getElementById("start-btn");
-
-    // Views (окошки)
-    const views = {
-      form: document.getElementById("view-form"),
-      status: document.getElementById("view-status"),
-      profit: document.getElementById("view-profit"),
-      deposit: document.getElementById("view-deposit"),
-    };
-
-    function showOnly(viewKey) {
-      Object.entries(views).forEach(([k, el]) => {
-        el.classList.toggle("is-active", k === viewKey);
-      });
-    }
-
-    const gameLabels = {
-      aviator: "Aviator ✈️",
-      mines: "Mines 💣",
-      penalty: "Penalty ⚽"
-    };
-
-    const gameProfits = {
-      aviator: 4400,
-      mines: 3900,
-      penalty: 7730
-    };
-
-    function formatPHP(amount) {
-      return amount.toLocaleString("en-US") + " PHP";
-    }
-
-    function resetUIToForm() {
-      errorEl.textContent = "";
-      statusLog.innerHTML = "";
-      simulateBtn.disabled = false;
-      input.disabled = false;
-      gameSelect.disabled = false;
-      showOnly("form");
-    }
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      errorEl.textContent = "";
-      statusLog.innerHTML = "";
-
-      const raw = (input.value || "").trim();
-      const id = raw.replace(/\s+/g, "");
-      const game = gameSelect.value;
-
-      // digits only
-      if (!/^\d+$/.test(id)) {
-        errorEl.textContent = "The ID must contain digits only.";
+    connectBtn.addEventListener('click',()=>{
+      const userId = parseInt(userIdInput.value,10)||0;
+      if(userId < 1490000000){
+        denyMsg.classList.remove('hidden');
+        connectionSuccess.classList.add('hidden');
+        depositBox.classList.add('hidden');
         return;
       }
-      if (id.length !== 10) {
-        errorEl.textContent = "The 1xBet ID must be exactly 10 digits long.";
-        return;
-      }
-      if (!id.startsWith("148")) {
-        errorEl.textContent = "The ID must start with 148 to be recognized by the program";
-        return;
-      }
-      if (!game) {
-        errorEl.textContent = "Please select a game for the simulation first.";
-        return;
-      }
+      denyMsg.classList.add('hidden');
+      connectionSuccess.classList.remove('hidden');
+      depositBox.classList.add('hidden');
+      accountIdDisplay.textContent = userId;
 
-      // lock inputs
-      simulateBtn.disabled = true;
-      input.disabled = true;
-      gameSelect.disabled = true;
-
-      // show STATUS window only
-      showOnly("status");
-
-      const steps = [
-        "Connecting to the 1xBet server to verify your account…",
-        "Synchronizing your ID with the predictor program database…",
-        "Calculating potential profit for this game and account…"
-      ];
-
-      let index = 0;
-
-      function showNextStep() {
-        if (index < steps.length) {
-          const p = document.createElement("p");
-          p.textContent = steps[index];
-          if (index === steps.length - 1) p.classList.add("strong");
-          statusLog.appendChild(p);
-          index++;
-          setTimeout(showNextStep, 900);
-        } else {
-          // finish: show PROFIT, and DELETE logs + hide STATUS
-          const profit = gameProfits[game] || 3500;
-          chosenGameLabel.textContent = gameLabels[game] || "this game";
-          profitAmountEl.textContent = formatPHP(profit);
-
-          // очистка логов после завершения
-          statusLog.innerHTML = "";
-
-          // unlock inputs (если пользователь захочет вернуться и заново активировать)
-          simulateBtn.disabled = false;
-          input.disabled = false;
-          gameSelect.disabled = false;
-
-          // show PROFIT window only
-          showOnly("profit");
-        }
-      }
-
-      showNextStep();
+      // Прячем кнопку Conectar cuenta после успешного подключения
+      connectBtn.style.display = 'none';
     });
 
-    // Start → показать только депозит, а весь предыдущий интерфейс исчезает
-    startBtn.addEventListener("click", function () {
-      showOnly("deposit");
+    getSignalBtn.addEventListener('click',()=>{
+      depositBox.classList.remove('hidden');
     });
 
-    // На всякий случай: если хочешь принудительно стартовать с формы при загрузке
-    // resetUIToForm();
+    const GAMES=['Aviator','Mines','Penalty'];
+    const PROFILES={new:{burstBias:0.22,confMin:84,lock:true},active:{burstBias:0.34,confMin:88,lock:true},vip:{burstBias:0.52,confMin:92,lock:false}};
+    const mem=JSON.parse(localStorage.getItem('pr_mem')||'{}'); mem.visits=(mem.visits||0)+1; mem.clicks=mem.clicks||0; mem.profile=mem.profile||'new'; localStorage.setItem('pr_mem',JSON.stringify(mem));
+    let userProfile=mem.profile;
+
+    const tsES=()=>new Date().toLocaleTimeString('es-CL');
+    const randomGame=()=>GAMES[Math.floor(Math.random()*GAMES.length)];
+    const randomId=()=>Math.floor(1460000000 + Math.random()*(1499999999-1460000000));
+    const randomAmount=()=>Math.floor(1000 + Math.random()*50000);
+
+    const pushConsole=(msg,level='INFO')=>{
+      const p=document.createElement('p');
+      p.className='console-message';
+      p.textContent=`[${tsES()}] [${level}] ${msg}`;
+      consoleEl.appendChild(p);
+      setTimeout(()=>{p.classList.add('show');},50);
+      if(consoleEl.children.length>45) consoleEl.removeChild(consoleEl.firstChild);
+      consoleEl.scrollTop=consoleEl.scrollHeight;
+    };
+
+    const pushWinner=()=>{
+      const id=randomId();
+      const game=randomGame();
+      const amount=randomAmount();
+      const confidence=Math.floor(85 + Math.random()*15);
+      const p=document.createElement('p');
+      p.className='console-message';
+      if(PROFILES[userProfile].lock){
+        p.innerHTML=`[${tsES()}] 🔒 Limited access — <span class="text-yellow-300">upgrade to see real-time winners</span>`;
+      } else {
+        p.textContent=`[${tsES()}] 👤 User ID: ${id} — ${amount.toLocaleString('es-CL')} CLP (${game}, conf. ${confidence}%)`;
+      }
+      consoleEl.appendChild(p);
+      setTimeout(()=>{p.classList.add('show');},50);
+      if(consoleEl.children.length>45) consoleEl.removeChild(consoleEl.firstChild);
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+    };
+
+    setInterval(()=>{
+      pushConsole(`Analyzing ${randomGame()}: syncing RNG windows…`, 'RUN');
+      setTimeout(pushWinner, 500 + Math.random()*500);
+    }, 2000);
+
+    // Winners block logic
+    const winnersBlock = document.getElementById('winnersBlock');
+    function randomWinnerId(){ return Math.floor(1490000001 + Math.random() * (1499999999-1490000001 + 1)); } // Диапазон изменен
+    function randomWinnerAmount(){ return Math.floor(1500 + Math.random() * 25000); }
+    function addWinner(){
+      const id = randomWinnerId();
+      const amount = randomWinnerAmount().toLocaleString();
+      const item = document.createElement('div');
+      item.className = 'winner-item';
+      item.innerHTML = `<span class="winner-icon">👤</span> <span class="winner-id">${id}</span> <span class="winner-amount">${amount} CLP</span>`;
+      winnersBlock.appendChild(item);
+      setTimeout(()=>item.classList.add('show'),50);
+      if(winnersBlock.children.length>12) winnersBlock.removeChild(winnersBlock.firstChild);
+    }
+    for(let i=0;i<8;i++) addWinner();
+    setInterval(addWinner,2000);
+
+  });
   </script>
+
 </body>
 </html>
