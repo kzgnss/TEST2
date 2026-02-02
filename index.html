@@ -3,229 +3,113 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>برنامج توقعات — وصول VIP</title>
+  <title>VIP Predictor</title>
   <style>
     :root{
       --bg:#0b0f1a;
       --card:#0f1626;
       --text:#eef2ff;
       --muted:rgba(238,242,255,.72);
-      --border:rgba(255,255,255,.08);
-      --accent:#7c5cff;
-      --accent2:#35d0ba;
-      --radius:18px;
-      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --border:rgba(255,255,255,.10);
+      --a:#7c5cff;
+      --b:#35d0ba;
+      --r:18px;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans Arabic", Tahoma, Arial, sans-serif;
       background:
-        radial-gradient(900px 520px at 80% -10%, rgba(124,92,255,.28), transparent 55%),
-        radial-gradient(820px 520px at 10% 0%, rgba(53,208,186,.20), transparent 55%),
+        radial-gradient(900px 520px at 80% -10%, rgba(124,92,255,.26), transparent 55%),
+        radial-gradient(820px 520px at 10% 0%, rgba(53,208,186,.18), transparent 55%),
         var(--bg);
       color:var(--text);
-      line-height:1.55;
+      display:flex;min-height:100vh;
+      align-items:center;justify-content:center;
+      padding:18px;
     }
-    .wrap{max-width:720px;margin:0 auto;padding:28px 16px 48px}
     .card{
+      width:min(520px, 100%);
       background:rgba(255,255,255,.03);
       border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
+      border-radius:var(--r);
+      padding:18px;
     }
     .top{
-      padding:18px 18px 0;
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-bottom:10px;
     }
-    .brand{display:flex;align-items:center;gap:10px;font-weight:900}
-    .logo{
-      width:34px;height:34px;border-radius:14px;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      box-shadow:0 12px 30px rgba(124,92,255,.20);
-      flex:0 0 auto;
-    }
+    .brand{font-weight:900;letter-spacing:.2px}
     .tag{
-      font-size:12.5px;color:var(--muted);
+      font-size:12px;color:var(--muted);
       border:1px solid var(--border);
-      padding:7px 10px;border-radius:999px;
-      background:rgba(255,255,255,.03);
+      padding:6px 10px;border-radius:999px;
+      background:rgba(255,255,255,.02);
       white-space:nowrap;
     }
-    .body{padding:16px 18px 18px}
-    h1{margin:10px 0 10px;font-size:30px;line-height:1.15}
-    .sub{margin:0 0 14px;color:var(--muted);font-size:14.5px}
-    .kpis{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-      margin:14px 0 14px;
+    h1{margin:0 0 8px;font-size:22px;line-height:1.2}
+    .sum{
+      margin:0 0 12px;
+      font-size:44px;font-weight:950;line-height:1;
+      background:linear-gradient(135deg,var(--b),var(--a));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
     }
-    @media (max-width:520px){ .kpis{grid-template-columns:1fr} }
-    .kpi{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.03);
-      border-radius:16px;
-      padding:12px;
-    }
-    .kpi b{display:block;font-size:14px;margin-bottom:6px}
-    .kpi span{color:var(--muted);font-size:12.8px}
-
-    .ctaRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .txt{margin:0 0 14px;color:var(--muted);font-size:13.5px}
+    .btns{display:grid;gap:10px}
+    a,button{font:inherit}
     .btn{
-      border:0;
-      border-radius:16px;
-      padding:12px 14px;
-      font-weight:900;
-      cursor:pointer;
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      padding:12px 14px;border-radius:14px;
       text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      transition:transform .08s ease, opacity .12s ease;
-      flex:1 1 220px;
-      text-align:center;
+      font-weight:900;
+      border:0;cursor:pointer;
     }
-    .btn:active{transform:translateY(1px)}
-    .primary{
-      background:linear-gradient(135deg,var(--accent),#5a8cff);
+    .deposit{
+      background:linear-gradient(135deg,var(--a),#5a8cff);
       color:white;
     }
-    .secondary{
-      background:linear-gradient(135deg,var(--accent2),#21b7ff);
-      color:#06101a;
-    }
-    .ghost{
+    .tg{
       background:rgba(255,255,255,.04);
-      border:1px solid var(--border);
       color:var(--text);
-      flex:0 0 auto;
-    }
-
-    details{
-      margin-top:14px;
       border:1px solid var(--border);
-      border-radius:16px;
-      background:rgba(255,255,255,.02);
-      padding:12px 12px;
     }
-    summary{cursor:pointer;font-weight:900;list-style:none}
-    summary::-webkit-details-marker{display:none}
-    .steps{margin:10px 0 0;color:var(--muted);font-size:13.5px;display:grid;gap:8px}
-
-    .line{height:1px;background:var(--border);margin:14px 0}
-    .disclaimer{
-      color:rgba(238,242,255,.62);
-      font-size:12px;
-      margin:0;
-    }
-    .warn{
-      margin-top:12px;
-      border:1px solid rgba(255,92,122,.22);
-      background:rgba(255,92,122,.08);
-      color:#ffd4dd;
-      border-radius:16px;
-      padding:12px;
-      font-size:12.5px;
+    .fine{
+      margin:12px 0 0;
+      color:rgba(238,242,255,.58);
+      font-size:11.5px;
+      line-height:1.45;
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="card">
-      <div class="top">
-        <div class="brand">
-          <div class="logo" aria-hidden="true"></div>
-          <div>VIP Predictor</div>
-        </div>
-        <div class="tag">🇪🇬 Egypt • 18+</div>
-      </div>
+  <div class="card">
+    <div class="top">
+      <div class="brand">VIP Predictor</div>
+      <div class="tag">🇪🇬 18+</div>
+    </div>
 
-      <div class="body">
-        <h1>برنامج توقّعات يساعدك تاخد قرار أهدى</h1>
-        <p class="sub">
-          ده <b>مش ضمان ربح</b>. البرنامج بيعرض إشارات/تحليل واحتمالات عشان تقلّل العشوائية وتلتزم بخطة لعب.
-        </p>
+    <h1>اعمل إيداع على حسابك</h1>
+    <div class="sum">230 EGP</div>
 
-        <div class="kpis">
-          <div class="kpi">
-            <b>دقّة (حسب بيانات داخلية)</b>
-            <span>على عينات تاريخية: <b>لحد 89%</b> — النتائج بتختلف ومش مضمونة.</span>
-          </div>
-          <div class="kpi">
-            <b>الوصول</b>
-            <span>التفعيل بيكون عبر تيليجرام + شرح سريع للاستخدام.</span>
-          </div>
-        </div>
+    <p class="txt">
+      بعد الإيداع، ابعت إثبات (سكرينشوت) على تيليجرام عشان نفعّل وصول VIP.
+    </p>
 
-        <div class="ctaRow">
-          <a class="btn primary" href="https://t.me/PUT_YOUR_BOT_OR_SUPPORT" target="_blank" rel="noopener">
-            خد الوصول على تيليجرام <span aria-hidden="true">↗</span>
-          </a>
+    <div class="btns">
+      <!-- رابط صفحة الإيداع -->
+      <a class="btn deposit" href="PUT_YOUR_DEPOSIT_LINK_HERE" target="_blank" rel="noopener">
+        روح لصفحة الإيداع 💳
+      </a>
 
-          <!-- ضع رابط صفحة الإيداع/Deposit هنا -->
-          <a class="btn secondary" href="PUT_YOUR_DEPOSIT_LINK_HERE" target="_blank" rel="noopener">
-            روح لصفحة الإيداع <span aria-hidden="true">💳</span>
-          </a>
+      <!-- رابط تيليجرام للدعم/بوت -->
+      <a class="btn tg" href="https://t.me/PUT_YOUR_BOT_OR_SUPPORT" target="_blank" rel="noopener">
+        ابعت إثبات الإيداع على تيليجرام ↗
+      </a>
+    </div>
 
-          <button class="btn ghost" id="copyMsg">انسخ رسالة جاهزة</button>
-        </div>
-
-        <details>
-          <summary>إزاي شغال؟</summary>
-          <div class="steps">
-            <div>1) بتبعت رسالة للدعم على تيليجرام.</div>
-            <div>2) بنشرح طريقة الاستخدام (خطوة بخطوة).</div>
-            <div>3) تاخد الوصول + قواعد إدارة المخاطر.</div>
-          </div>
-        </details>
-
-        <div class="warn">
-          ⚠️ <b>تنبيه:</b> اللعب فيه مخاطرة وقد يسبب خسارة فلوس. لو أقل من 18 سنة — متكملش.
-        </div>
-
-        <div class="line"></div>
-
-        <p class="disclaimer">
-          • البرنامج بيقدّم تحليل/إشارات واحتمالات فقط. <br>
-          • مفيش وعود ربح، ومفيش “نتيجة مضمونة”. <br>
-          • “89%” رقم داخلي على بيانات تاريخية، مش شرط يتكرر. <br>
-          • التزم بقوانين بلدك وشروط المنصات.
-        </p>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    const btn = document.getElementById('copyMsg');
-
-    async function copyText(text){
-      try{
-        await navigator.clipboard.writeText(text);
-        return true;
-      }catch(e){
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        const ok = document.execCommand('copy');
-        document.body.removeChild(ta);
-        return ok;
-      }
-    }
-
-    btn.addEventListener('click', async () => {
-      const msg =
-`سلام! عايز وصول VIP للبرنامج.
-ممكن تبعتلي الطريقة والخطوات؟
-(مصر 🇪🇬)`;
-
-      const ok = await copyText(msg);
-      btn.textContent = ok ? 'اتنسخ ✅' : 'فشل النسخ';
-      setTimeout(()=>btn.textContent='انسخ رسالة جاهزة', 1400);
-    });
-  </script>
+    <p class="fine">
+      مفيش ضمان ربح. ده محتوى/أداة مساعدة (تحليل/إشارات) والنتائج بتختلف. التزم بالقوانين المحلية وشروط المنصة.
+    </p>
+  </div>
 </body>
 </html>
