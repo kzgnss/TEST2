@@ -45,7 +45,7 @@
 
     .card {
       width: 100%;
-      max-width: 520px;
+      max-width: 560px;
       border-radius: 28px;
       border: 1px solid rgba(255,255,255,0.1);
       background: rgba(10, 18, 34, 0.72);
@@ -73,6 +73,7 @@
       border-radius: 999px;
       padding: 8px 12px;
       font-size: 13px;
+      white-space: nowrap;
     }
 
     .brand {
@@ -130,6 +131,44 @@
       color: rgba(255,255,255,0.72);
     }
 
+    .language-box {
+      margin-top: 16px;
+      text-align: right;
+      display: grid;
+      gap: 10px;
+    }
+
+    .language-label {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      font-weight: 600;
+    }
+
+    .language-select {
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      padding: 14px 16px;
+      font-size: 16px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .language-select option {
+      color: #111827;
+    }
+
+    .language-hint {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      text-align: right;
+    }
+
     .actions {
       margin-top: 16px;
       display: grid;
@@ -153,6 +192,7 @@
     }
 
     .btn:hover { transform: translateY(-1px); }
+
     .btn-primary {
       background: linear-gradient(90deg, #7c3aed 0%, #4f7cff 100%);
       color: #fff;
@@ -218,44 +258,172 @@
     <section class="card">
       <div class="topbar">
         <div class="brand">
-          <h1>VIP Predictor</h1>
-          <p>Morocco sports analytics dashboard</p>
+          <h1 id="brandTitle">VIP Predictor</h1>
+          <p id="brandSubtitle">Morocco sports analytics dashboard</p>
         </div>
         <div class="badge">🇲🇦 Morocco <span>18+</span></div>
       </div>
 
       <div class="hero">
-        <p class="eyebrow">واجهة خاصة بالتحليلات الرياضية</p>
+        <p class="eyebrow" id="eyebrow">واجهة خاصة بالتحليلات الرياضية</p>
         <h2 class="big">MAROC</h2>
-        <p class="subtext">
+        <p class="subtext" id="subtext">
           واجهة أنيقة وحديثة للوصول إلى لوحة التحليلات الرياضية، تنبيهات المباريات، والتحديثات الخاصة بالمستخدمين.
         </p>
 
+        <div class="language-box">
+          <label class="language-label" for="languageSelect" id="languageLabel">اختر اللغة</label>
+          <select class="language-select" id="languageSelect">
+            <option value="ar">العربية</option>
+            <option value="fr">Français</option>
+            <option value="en">English</option>
+            <option value="darija">Darija</option>
+          </select>
+          <div class="language-hint" id="languageHint">اللغات الأكثر استخدامًا في المغرب</div>
+        </div>
+
         <div class="actions">
-          <a class="btn btn-primary" href="#">🚀 الدخول إلى اللوحة</a>
-          <a class="btn btn-secondary" href="#">✈️ تواصل عبر تيليجرام</a>
+          <a class="btn btn-primary" id="primaryBtn" href="#">🚀 الدخول إلى اللوحة</a>
+          <a class="btn btn-secondary" id="secondaryBtn" href="#">✈️ تواصل عبر تيليجرام</a>
         </div>
       </div>
 
       <div class="grid">
         <div class="feature">
-          <small>Live analytics</small>
-          <strong>Real-time match insights</strong>
+          <small id="feature1Small">Live analytics</small>
+          <strong id="feature1Strong">Real-time match insights</strong>
         </div>
         <div class="feature">
-          <small>Localized UI</small>
-          <strong>Arabic-first experience for Morocco</strong>
+          <small id="feature2Small">Localized UI</small>
+          <strong id="feature2Strong">Arabic-first experience for Morocco</strong>
         </div>
         <div class="feature">
-          <small>Private access</small>
-          <strong>VIP dashboard with clean design</strong>
+          <small id="feature3Small">Private access</small>
+          <strong id="feature3Strong">VIP dashboard with clean design</strong>
         </div>
       </div>
 
-      <div class="footer">
+      <div class="footer" id="footerText">
         Single-file landing page ready for GitHub Pages.
       </div>
     </section>
   </main>
+
+  <script>
+    const translations = {
+      ar: {
+        lang: 'ar',
+        dir: 'rtl',
+        brandTitle: 'VIP Predictor',
+        brandSubtitle: 'لوحة تحليلات رياضية للمغرب',
+        eyebrow: 'واجهة خاصة بالتحليلات الرياضية',
+        subtext: 'واجهة أنيقة وحديثة للوصول إلى لوحة التحليلات الرياضية، تنبيهات المباريات، والتحديثات الخاصة بالمستخدمين.',
+        languageLabel: 'اختر اللغة',
+        languageHint: 'اللغات الأكثر استخدامًا في المغرب',
+        primaryBtn: '🚀 الدخول إلى اللوحة',
+        secondaryBtn: '✈️ تواصل عبر تيليجرام',
+        feature1Small: 'تحليلات مباشرة',
+        feature1Strong: 'رؤية لحظية لأهم مجريات المباريات',
+        feature2Small: 'واجهة محلية',
+        feature2Strong: 'تجربة مناسبة للمستخدمين في المغرب',
+        feature3Small: 'وصول خاص',
+        feature3Strong: 'لوحة VIP بتصميم نظيف وحديث',
+        footerText: 'صفحة هبوط بملف واحد جاهزة للرفع على GitHub Pages.'
+      },
+      fr: {
+        lang: 'fr',
+        dir: 'ltr',
+        brandTitle: 'VIP Predictor',
+        brandSubtitle: 'Tableau d’analyse sportive pour le Maroc',
+        eyebrow: 'Interface privée d’analyse sportive',
+        subtext: 'Une interface moderne et élégante pour accéder au tableau d’analyse sportive, aux alertes de matchs et aux mises à jour des utilisateurs.',
+        languageLabel: 'Choisir la langue',
+        languageHint: 'Langues les plus utilisées au Maroc',
+        primaryBtn: '🚀 Accéder au tableau',
+        secondaryBtn: '✈️ Contacter sur Telegram',
+        feature1Small: 'Analyse live',
+        feature1Strong: 'Suivi en temps réel des matchs',
+        feature2Small: 'Interface locale',
+        feature2Strong: 'Expérience adaptée aux utilisateurs au Maroc',
+        feature3Small: 'Accès privé',
+        feature3Strong: 'Dashboard VIP au design épuré',
+        footerText: 'Landing page en un seul fichier prête pour GitHub Pages.'
+      },
+      en: {
+        lang: 'en',
+        dir: 'ltr',
+        brandTitle: 'VIP Predictor',
+        brandSubtitle: 'Morocco sports analytics dashboard',
+        eyebrow: 'Private sports analytics interface',
+        subtext: 'A modern and clean interface for accessing sports analytics, match alerts, and user updates.',
+        languageLabel: 'Choose language',
+        languageHint: 'Most popular languages in Morocco',
+        primaryBtn: '🚀 Open dashboard',
+        secondaryBtn: '✈️ Contact on Telegram',
+        feature1Small: 'Live analytics',
+        feature1Strong: 'Real-time match insights',
+        feature2Small: 'Localized UI',
+        feature2Strong: 'Experience adapted for users in Morocco',
+        feature3Small: 'Private access',
+        feature3Strong: 'VIP dashboard with clean design',
+        footerText: 'Single-file landing page ready for GitHub Pages.'
+      },
+      darija: {
+        lang: 'ar',
+        dir: 'rtl',
+        brandTitle: 'VIP Predictor',
+        brandSubtitle: 'لوحة ديال التحليلات الرياضية فالمغرب',
+        eyebrow: 'واجهة خاصة بالتحليلات الرياضية',
+        subtext: 'واجهة زوينة وعصرية باش تدخل للتحليلات الرياضية، تنبيهات الماتشات، والتحديثات الخاصة بالمستخدمين.',
+        languageLabel: 'اختار اللغة',
+        languageHint: 'اللغات الأكثر استعمالاً فالمغرب',
+        primaryBtn: '🚀 دخل للوحة',
+        secondaryBtn: '✈️ تواصل على تيليگرام',
+        feature1Small: 'تحليلات مباشرة',
+        feature1Strong: 'متابعة لحظية لأهم مجريات الماتش',
+        feature2Small: 'واجهة محلية',
+        feature2Strong: 'تجربة مناسبة للمستخدمين فالمغرب',
+        feature3Small: 'ولوج خاص',
+        feature3Strong: 'لوحة VIP بتصميم نقي وحديث',
+        footerText: 'Landing page بملف واحد، واجدة للرفع على GitHub Pages.'
+      }
+    };
+
+    const ids = [
+      'brandTitle','brandSubtitle','eyebrow','subtext','languageLabel','languageHint',
+      'primaryBtn','secondaryBtn','feature1Small','feature1Strong','feature2Small',
+      'feature2Strong','feature3Small','feature3Strong','footerText'
+    ];
+
+    const select = document.getElementById('languageSelect');
+
+    function applyLanguage(key) {
+      const data = translations[key] || translations.ar;
+      document.documentElement.lang = data.lang;
+      document.documentElement.dir = data.dir;
+
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && data[id]) el.textContent = data[id];
+      });
+
+      const brand = document.querySelector('.brand');
+      const languageBox = document.querySelector('.language-box');
+      const hero = document.querySelector('.hero');
+
+      if (data.dir === 'rtl') {
+        brand.style.textAlign = 'right';
+        languageBox.style.textAlign = 'right';
+        hero.style.textAlign = 'center';
+      } else {
+        brand.style.textAlign = 'left';
+        languageBox.style.textAlign = 'left';
+        hero.style.textAlign = 'center';
+      }
+    }
+
+    select.addEventListener('change', (e) => applyLanguage(e.target.value));
+    applyLanguage('ar');
+  </script>
 </body>
 </html>
