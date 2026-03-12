@@ -1,142 +1,261 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>VIP Predictor</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Morocco VIP Analytics</title>
   <style>
-    :root{
-      --bg:#0b0f1a;
-      --card:#0f1626;
-      --text:#eef2ff;
-      --muted:rgba(238,242,255,.72);
-      --border:rgba(255,255,255,.10);
-      --a:#7c5cff;
-      --b:#35d0ba;
-      --r:18px;
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: Inter, Arial, sans-serif;
+      background: #020817;
+      color: #fff;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans Arabic", Tahoma, Arial, sans-serif;
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bg {
+      position: fixed;
+      inset: 0;
       background:
-        radial-gradient(900px 520px at 80% -10%, rgba(124,92,255,.26), transparent 55%),
-        radial-gradient(820px 520px at 10% 0%, rgba(53,208,186,.18), transparent 55%),
-        var(--bg);
-      color:var(--text);
-      display:flex;min-height:100vh;
-      align-items:center;justify-content:center;
-      padding:18px;
-    }
-    .card{
-      width:min(520px, 100%);
-      background:rgba(255,255,255,.03);
-      border:1px solid var(--border);
-      border-radius:var(--r);
-      padding:18px;
-    }
-    .top{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      margin-bottom:12px;
-    }
-    .brand{font-weight:950;letter-spacing:.2px}
-    .tag{
-      font-size:12px;color:var(--muted);
-      border:1px solid var(--border);
-      padding:6px 10px;border-radius:999px;
-      background:rgba(255,255,255,.02);
-      white-space:nowrap;
+        radial-gradient(circle at 15% 10%, rgba(34,211,238,0.14), transparent 24%),
+        radial-gradient(circle at 82% 8%, rgba(99,102,241,0.18), transparent 28%),
+        radial-gradient(circle at 50% 100%, rgba(37,99,235,0.12), transparent 30%),
+        linear-gradient(180deg, #020817 0%, #030b1b 100%);
     }
 
-    h1{margin:0 0 10px;font-size:18px;color:var(--muted);font-weight:800}
-
-    /* LOUD AMOUNT */
-    .sum{
-      margin:0 0 14px;
-      font-weight:1000;
-      line-height:0.95;
-      text-align:center;
-
-      /* responsive huge size */
-      font-size: clamp(54px, 10vw, 92px);
-
-      /* gradient text */
-      background: linear-gradient(135deg, var(--b), var(--a));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-
-      /* glow */
-      text-shadow:
-        0 0 18px rgba(53,208,186,.22),
-        0 0 32px rgba(124,92,255,.18);
-
-      /* subtle pulse */
-      animation: pulse 1.7s ease-in-out infinite;
-    }
-    @keyframes pulse{
-      0%,100%{transform:scale(1); filter:brightness(1)}
-      50%{transform:scale(1.03); filter:brightness(1.12)}
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 980px;
+      padding: 24px;
+      display: flex;
+      justify-content: center;
     }
 
-    .txt{margin:0 0 14px;color:var(--muted);font-size:13.5px;text-align:center}
+    .card {
+      width: 100%;
+      max-width: 520px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(10, 18, 34, 0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 20px 80px rgba(0,0,0,0.45);
+      padding: 18px;
+    }
 
-    .btns{display:grid;gap:10px}
-    a{font:inherit}
-    .btn{
-      display:flex;align-items:center;justify-content:center;gap:10px;
-      padding:12px 14px;border-radius:14px;
-      text-decoration:none;
-      font-weight:950;
-      border:0;
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
     }
-    .deposit{
-      background:linear-gradient(135deg,var(--a),#5a8cff);
-      color:white;
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.82);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
     }
-    .tg{
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      border:1px solid var(--border);
+
+    .brand {
+      text-align: left;
     }
-    .fine{
-      margin:12px 0 0;
-      color:rgba(238,242,255,.58);
-      font-size:11.5px;
-      line-height:1.45;
-      text-align:center;
+
+    .brand h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand p {
+      margin: 6px 0 0;
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .hero {
+      border-radius: 24px;
+      border: 1px solid rgba(103, 232, 249, 0.14);
+      background: linear-gradient(180deg, rgba(10,19,35,0.96), rgba(9,16,30,0.9));
+      padding: 28px 22px 24px;
+      text-align: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02), 0 0 50px rgba(59,130,246,0.12);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.82);
+    }
+
+    .big {
+      margin: 0;
+      font-size: clamp(54px, 11vw, 88px);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      background: linear-gradient(90deg, #67e8f9 0%, #60a5fa 45%, #818cf8 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 18px rgba(96,165,250,0.15);
+    }
+
+    .subtext {
+      margin: 14px auto 0;
+      max-width: 420px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .actions {
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 56px;
+      border: 0;
+      border-radius: 18px;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 700;
+      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+      cursor: pointer;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(90deg, #7c3aed 0%, #4f7cff 100%);
+      color: #fff;
+      box-shadow: 0 16px 40px rgba(79,124,255,0.28);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.92);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .feature {
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      padding: 16px;
+    }
+
+    .feature small {
+      display: block;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+    }
+
+    .feature strong {
+      display: block;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .footer {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    @media (max-width: 640px) {
+      .wrap { padding: 16px; }
+      .card { padding: 14px; border-radius: 24px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .brand { text-align: right; }
+      .brand h1 { font-size: 28px; }
+      .hero { padding: 24px 16px 20px; }
+      .grid { grid-template-columns: 1fr; }
+      .btn { font-size: 16px; min-height: 52px; }
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="top">
-      <div class="brand">VIP Predictor</div>
-      <div class="tag">🇪🇬 18+</div>
-    </div>
+  <div class="bg"></div>
 
-    <h1>مبلغ الإيداع المطلوب</h1>
-    <div class="sum">230 EGP</div>
+  <main class="wrap">
+    <section class="card">
+      <div class="topbar">
+        <div class="brand">
+          <h1>VIP Predictor</h1>
+          <p>Morocco sports analytics dashboard</p>
+        </div>
+        <div class="badge">🇲🇦 Morocco <span>18+</span></div>
+      </div>
 
-    <p class="txt">
-      اعمل إيداع على حسابك، وبعدها ابعت سكرينشوت على تيليجرام لتفعيل وصول VIP.
-    </p>
+      <div class="hero">
+        <p class="eyebrow">واجهة خاصة بالتحليلات الرياضية</p>
+        <h2 class="big">MAROC</h2>
+        <p class="subtext">
+          واجهة أنيقة وحديثة للوصول إلى لوحة التحليلات الرياضية، تنبيهات المباريات، والتحديثات الخاصة بالمستخدمين.
+        </p>
 
-    <div class="btns">
-      <!-- رابط صفحة الإيداع -->
-      <a class="btn deposit" href="https://reffpa.com/L?tag=d_4127419m_18607c_&site=4127419&ad=18607&r=registration" target="_blank" rel="noopener">
-        روح لصفحة الإيداع 💳
-      </a>
+        <div class="actions">
+          <a class="btn btn-primary" href="#">🚀 الدخول إلى اللوحة</a>
+          <a class="btn btn-secondary" href="#">✈️ تواصل عبر تيليجرام</a>
+        </div>
+      </div>
 
-      <!-- رابط تيليجرام للدعم/بوت -->
-      <a class="btn tg" href="https://t.me/Mohamed_Yilmaz_bot" target="_blank" rel="noopener">
-        ابعت إثبات الإيداع على تيليجرام ↗
-      </a>
-    </div>
+      <div class="grid">
+        <div class="feature">
+          <small>Live analytics</small>
+          <strong>Real-time match insights</strong>
+        </div>
+        <div class="feature">
+          <small>Localized UI</small>
+          <strong>Arabic-first experience for Morocco</strong>
+        </div>
+        <div class="feature">
+          <small>Private access</small>
+          <strong>VIP dashboard with clean design</strong>
+        </div>
+      </div>
 
-    <p class="fine">
-      مفيش ضمان ربح. ده تحليل/إشارات فقط والنتائج بتختلف. التزم بالقوانين المحلية وشروط المنصة.
-    </p>
-  </div>
+      <div class="footer">
+        Single-file landing page ready for GitHub Pages.
+      </div>
+    </section>
+  </main>
 </body>
 </html>
